@@ -1,0 +1,46 @@
+﻿* { font-family: 'Inter', sans-serif; }
+         .card-shadow { box-shadow: 0 20px 35px -8px rgba(0,0,0,0.2); }
+         #progressBar { transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+         .option-transition { transition: all 0.2s ease; }
+         .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+         .feedback-popup {
+         animation: fadeInUp 0.3s ease forwards;
+         }
+         @keyframes fadeInUp {
+         from { opacity: 0; transform: translateY(10px); }
+         to { opacity: 1; transform: translateY(0); }
+         }
+         html, body {
+         margin: 0;
+         padding: 0;
+         }
+         @media (max-width: 640px) {
+         body {
+         margin-top: 0 !important;
+         }
+         }
+         .review-scroll {
+         flex: 1;
+         overflow-y: auto;
+         -webkit-overflow-scrolling: touch;
+         }
+         @keyframes pulse-soft {
+         0%, 100% {
+         transform: scale(1);
+         }
+         50% {
+         transform: scale(1.06);
+         }
+         }
+         .animate-pulse-soft {
+         animation: pulse-soft 1.5s ease-in-out infinite;
+         }
+         .emoji-img {
+         width: 1.4em;          /* ligeiramente maior para melhor legibilidade */
+         height: 1.4em;
+         display: inline-block;  /* garante que a imagem se comporte como texto inline */
+         vertical-align: middle; /* alinha verticalmente ao meio da linha */
+         margin-right: 6px;      /* espaço entre imagem e texto */
+         object-fit: contain;    /* evita distorção */
+         transform: translateY(-1px); /* ajuste fino opcional para compensar o baseline */
+         }
