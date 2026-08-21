@@ -2,59 +2,59 @@
 
 Aplicação web interativa desenvolvida para apresentar, de forma leve e gamificada, os principais conceitos da cultura DPSP.
 
-O projeto transforma um conteúdo institucional em uma experiência de quiz com perguntas de múltipla escolha, feedback imediato, sistema de pontuação, classificação final e revisão das respostas.
+O projeto transforma conteúdo institucional em uma experiência de quiz com perguntas de múltipla escolha, feedback imediato, progresso visual, pontuação, classificação e revisão das respostas.
 
 ## Visão geral
 
-O fluxo da aplicação foi pensado para uma experiência semelhante a um aplicativo mobile:
+A aplicação foi desenvolvida com foco em uma experiência semelhante à de um aplicativo mobile, utilizando uma interface compacta, animações e interações visuais.
 
-1. Tela inicial com identidade visual da DPSP.
+O fluxo principal é:
+
+1. Tela inicial.
 2. Início do quiz.
-3. Exibição de 10 perguntas com progresso visual.
-4. Seleção e validação das respostas.
-5. Feedback imediato para acertos e erros.
-6. Navegação entre perguntas.
-7. Cálculo automático da pontuação.
-8. Classificação de acordo com o desempenho.
-9. Revisão completa das respostas.
-10. Simulação de resgate de uma badge de participação.
+3. Exibição das perguntas.
+4. Seleção de uma alternativa.
+5. Validação da resposta.
+6. Feedback imediato.
+7. Avanço entre as questões.
+8. Cálculo da pontuação.
+9. Classificação final.
+10. Revisão das respostas.
 
 ## Funcionalidades
 
 - Quiz com 10 perguntas.
-- Sistema de múltipla escolha.
-- Validação individual das respostas.
-- Feedback visual para respostas corretas e incorretas.
+- Questões de múltipla escolha.
+- Validação das respostas.
+- Feedback visual para acertos e erros.
 - Barra de progresso dinâmica.
-- Navegação para voltar às perguntas anteriores.
-- Cálculo automático da pontuação.
-- Sistema de classificação:
-  - **90–100 pontos:** Guardião da Cultura
-  - **70–89 pontos:** Embaixador da Cultura
-  - **50–69 pontos:** Em Desenvolvimento
-  - **0–49 pontos:** Precisa Evoluir
-- Tela de resultado com revisão das respostas.
-- Modal de confirmação para o resgate da badge.
-- Interface responsiva e orientada para dispositivos móveis.
-- Animações e microinterações para melhorar a experiência.
-- Assets gráficos integrados ao projeto.
+- Navegação entre perguntas.
+- Sistema automático de pontuação.
+- Classificação baseada no desempenho.
+- Tela de resultado.
+- Revisão das respostas.
+- Modal de alerta.
+- Animações e microinterações.
+- Interface responsiva.
+- Layout inspirado em aplicações mobile.
+- Assets gráficos personalizados.
 
-## Tecnologias utilizadas
+## Tecnologias
 
 | Tecnologia | Utilização |
 |---|---|
 | HTML5 | Estrutura da aplicação |
-| CSS3 | Estilos personalizados e animações |
-| JavaScript | Lógica do quiz e gerenciamento de estado |
+| CSS3 | Estilos personalizados, animações e responsividade |
+| JavaScript | Lógica, estado, perguntas, pontuação e navegação |
 | Tailwind CSS | Construção da interface |
-| Animate.css | Animações de entrada |
-| Font Awesome | Ícones da interface |
-| Google Fonts / Inter | Tipografia |
+| Animate.css | Animações |
+| Font Awesome | Ícones |
+| Google Fonts — Inter | Tipografia |
 | GIF / PNG | Elementos visuais e feedback |
 
-## Arquitetura
+## Estrutura do projeto
 
-O projeto possui uma estrutura simples e adequada para uma aplicação front-end estática:
+O projeto utiliza uma estrutura separada por responsabilidade:
 
 ```text
 quizdpsp/
@@ -67,38 +67,181 @@ quizdpsp/
 │   ├── 0006.gif
 │   └── 0007.png
 │
-└── index.html
+├── css/
+│   └── style.css
+│
+├── js/
+│   └── script.js
+│
+├── index.html
+└── README.md
 ```
 
-A lógica atualmente está centralizada no `index.html`, incluindo:
+### `index.html`
 
-- banco de perguntas;
-- controle de estado;
-- seleção de respostas;
-- validação;
-- pontuação;
-- classificação;
-- renderização da revisão;
-- controle das telas;
-- modal de resgate.
+Responsável pela estrutura e marcação da interface.
+
+O HTML contém as principais telas da aplicação:
+
+- tela inicial;
+- tela do quiz;
+- tela de resultado;
+- área de perguntas e respostas;
+- barra de progresso;
+- área de feedback;
+- elementos de navegação.
+
+### `css/style.css`
+
+Responsável pelos estilos que não dependem diretamente das classes utilitárias do Tailwind.
+
+Inclui:
+
+- sombras personalizadas;
+- transições;
+- animações;
+- ajustes responsivos;
+- estilos de feedback;
+- scrollbar da revisão;
+- animações de pulso;
+- tratamento visual dos assets utilizados nas mensagens.
+
+### `js/script.js`
+
+Contém toda a lógica da aplicação.
+
+Entre as principais responsabilidades estão:
+
+- armazenamento das perguntas;
+- controle da questão atual;
+- armazenamento das respostas;
+- renderização das alternativas;
+- validação das respostas;
+- cálculo da pontuação;
+- exibição de feedback;
+- controle da navegação;
+- finalização do quiz;
+- exibição dos resultados.
+
+## Banco de perguntas
+
+As perguntas são armazenadas diretamente no JavaScript através de um array de objetos.
+
+Cada questão possui informações como:
+
+```javascript
+{
+    q: "O que está no centro da cultura DPSP?",
+    a: [
+        "Crescimento financeiro",
+        "Saúde em primeiro lugar",
+        "Expansão da marca",
+        "Tecnologia"
+    ],
+    c: 1,
+    feedbackAcerto: "...",
+    feedbackErro: "..."
+}
+```
+
+Estrutura:
+
+- `q` — pergunta;
+- `a` — alternativas;
+- `c` — índice da resposta correta;
+- `feedbackAcerto` — mensagem apresentada quando o usuário acerta;
+- `feedbackErro` — mensagem apresentada quando o usuário erra.
+
+Essa estrutura facilita a manutenção e permite adicionar novas perguntas sem alterar a estrutura da interface.
+
+## Sistema de pontuação
+
+Cada questão possui valor de **10 pontos**.
+
+A aplicação compara a alternativa selecionada pelo usuário com o índice da resposta correta.
+
+```javascript
+function computeScore() {
+    let total = 0;
+
+    userAnswers.forEach((ans, idx) => {
+        if (ans === questions[idx].c) {
+            total += 10;
+        }
+    });
+
+    score = total;
+    return total;
+}
+```
+
+Com 10 perguntas, a pontuação máxima é de:
+
+**100 pontos**
+
+## Classificação
+
+O desempenho do usuário é convertido em uma classificação final:
+
+| Pontuação | Classificação |
+|---:|---|
+| 90–100 | Guardião da Cultura |
+| 70–89 | Embaixador da Cultura |
+| 50–69 | Em Desenvolvimento |
+| 0–49 | Precisa Evoluir |
+
+## Interface e experiência
+
+A interface foi projetada para funcionar como uma experiência compacta e interativa.
+
+Entre os elementos utilizados estão:
+
+- cards com bordas arredondadas;
+- gradientes;
+- barra de progresso;
+- feedback visual;
+- animações;
+- botões com estados interativos;
+- hierarquia visual;
+- layout adaptado para telas menores;
+- elementos gráficos em GIF e PNG.
+
+A aplicação também utiliza Tailwind CSS para acelerar a construção da interface e CSS próprio para comportamentos e animações específicas.
+
+## Organização do JavaScript
+
+A lógica principal está organizada em funções específicas para cada responsabilidade.
+
+Entre elas:
+
+```text
+computeScore()
+showFeedback()
+renderQuestion()
+validateCurrentAnswer()
+finishQuiz()
+closeAlert()
+```
+
+Essa separação permite que cada etapa do fluxo do quiz tenha uma responsabilidade clara.
 
 ## Como executar
 
-Como o projeto é uma aplicação front-end estática, não é necessário instalar dependências ou configurar um servidor backend.
+O projeto é uma aplicação front-end estática e não necessita de backend ou banco de dados para funcionar.
 
-### Execução local
-
-Clone o repositório:
+### 1. Clone o repositório
 
 ```bash
 git clone https://github.com/JS171555/quizdpsp.git
 ```
 
-Entre na pasta:
+### 2. Entre na pasta
 
 ```bash
 cd quizdpsp
 ```
+
+### 3. Execute
 
 Abra o arquivo:
 
@@ -106,130 +249,107 @@ Abra o arquivo:
 index.html
 ```
 
-Também é possível utilizar uma extensão como **Live Server** no VS Code para executar a aplicação localmente.
+Também é recomendado utilizar o **Live Server** no VS Code para executar o projeto durante o desenvolvimento.
 
-## Como funciona a pontuação
+## Dependências externas
 
-Cada questão vale **10 pontos**.
+O projeto utiliza algumas bibliotecas através de CDN:
 
-A pontuação é calculada comparando a alternativa escolhida pelo usuário com o índice da resposta correta.
+- Tailwind CSS
+- Animate.css
+- Font Awesome
+- Google Fonts
 
-```javascript
-function computeScore() {
-  let total = 0;
+Por esse motivo, é necessária uma conexão com a internet para carregar esses recursos quando a aplicação for executada dessa forma.
 
-  userAnswers.forEach((ans, idx) => {
-    if (ans === questions[idx].c) {
-      total += 10;
-    }
-  });
+## Pontos técnicos demonstrados
 
-  score = total;
-  return total;
-}
-```
+Embora seja um projeto front-end relativamente compacto, ele demonstra conceitos importantes de desenvolvimento web:
 
-Isso permite uma pontuação máxima de **100 pontos**.
-
-## Estrutura das perguntas
-
-As perguntas são armazenadas em um array JavaScript, permitindo alterar ou adicionar questões sem precisar modificar a estrutura visual da aplicação.
-
-Exemplo:
-
-```javascript
-{
-  q: "O que está no centro da cultura DPSP?",
-  a: [
-    "Crescimento financeiro",
-    "Saúde em primeiro lugar",
-    "Expansão da marca",
-    "Tecnologia"
-  ],
-  c: 1,
-  feedbackAcerto: "...",
-  feedbackErro: "..."
-}
-```
-
-Cada pergunta possui:
-
-- `q` — enunciado;
-- `a` — alternativas;
-- `c` — índice da resposta correta;
-- `feedbackAcerto` — mensagem exibida quando o usuário acerta;
-- `feedbackErro` — mensagem exibida quando o usuário erra.
-
-## Experiência do usuário
-
-A interface foi desenvolvida priorizando uma experiência rápida e intuitiva.
-
-Alguns elementos utilizados:
-
-- cards com cantos arredondados;
-- gradientes;
-- barra de progresso;
-- feedback visual;
-- animações;
-- microinterações;
-- hierarquia visual clara;
-- layout compacto inspirado em interfaces mobile.
-
-A aplicação também utiliza estados visuais diferentes para alternativas selecionadas, corretas e incorretas.
-
-## Pontos de destaque técnico
-
-Apesar de ser uma aplicação pequena e sem backend, o projeto demonstra conceitos importantes de desenvolvimento front-end:
-
+- HTML semântico e estruturação de interface;
+- CSS personalizado;
+- CSS responsivo;
+- utilização de classes utilitárias;
 - manipulação do DOM;
 - gerenciamento de estado no JavaScript;
-- renderização dinâmica de conteúdo;
-- tratamento de eventos;
-- validação de entrada;
+- arrays e objetos;
+- funções;
+- eventos de interface;
+- renderização dinâmica;
+- validação de dados;
 - lógica condicional;
-- cálculo de pontuação;
 - controle de fluxo;
-- criação de componentes visuais reutilizáveis através de classes;
+- cálculo de pontuação;
+- separação de responsabilidades entre HTML, CSS e JavaScript;
 - integração de bibliotecas externas via CDN;
-- desenvolvimento de interface responsiva.
+- construção de uma experiência interativa.
 
 ## Possíveis evoluções
 
-O projeto possui uma base simples que pode ser expandida para uma aplicação mais completa.
+A arquitetura atual permite evoluir o projeto para uma aplicação mais robusta.
 
-### Próximas melhorias
+### Melhorias de front-end
 
-- [ ] Separar HTML, CSS e JavaScript em arquivos independentes.
-- [ ] Mover as perguntas para um arquivo JSON.
-- [ ] Criar um sistema de configuração para quantidade de perguntas.
-- [ ] Adicionar banco de perguntas aleatórias.
-- [ ] Implementar embaralhamento das alternativas.
-- [ ] Persistir resultados com `localStorage`.
-- [ ] Criar ranking de participantes.
-- [ ] Adicionar identificação do participante.
-- [ ] Criar backend para armazenamento dos resultados.
-- [ ] Gerar badge ou certificado automaticamente.
-- [ ] Adicionar painel administrativo.
-- [ ] Adicionar métricas de desempenho.
-- [ ] Criar testes automatizados para a lógica do quiz.
+- [ ] Separar as perguntas em um arquivo JSON.
+- [ ] Embaralhar as perguntas.
+- [ ] Embaralhar as alternativas.
+- [ ] Permitir configurar a quantidade de perguntas.
 - [ ] Melhorar acessibilidade e navegação por teclado.
-- [ ] Otimizar o carregamento das bibliotecas externas.
+- [ ] Adicionar suporte a diferentes tamanhos de tela.
+- [ ] Otimizar carregamento dos assets.
+- [ ] Adicionar testes automatizados para a lógica do quiz.
+
+### Persistência e backend
+
+- [ ] Salvar resultados utilizando `localStorage`.
+- [ ] Criar API para armazenamento dos resultados.
+- [ ] Adicionar banco de dados.
+- [ ] Criar identificação dos participantes.
+- [ ] Criar ranking.
+- [ ] Criar painel administrativo.
+- [ ] Adicionar métricas de desempenho.
+
+### Evolução da aplicação
+
+Uma possível evolução seria transformar o projeto de uma aplicação estática em uma solução completa:
+
+```text
+Frontend
+   ↓
+API
+   ↓
+Backend
+   ↓
+Banco de dados
+   ↓
+Dashboard administrativo
+```
+
+Isso permitiria armazenar resultados, acompanhar desempenho dos participantes e gerar métricas sobre o quiz.
 
 ## Status
 
 **Concluído — versão funcional**
 
-O projeto já possui o fluxo principal completo de quiz, pontuação, classificação e revisão de respostas.
+O fluxo principal da aplicação está implementado, incluindo perguntas, respostas, validação, feedback, progresso, pontuação, classificação e resultado.
 
 ## Objetivo do projeto
 
-Este projeto foi desenvolvido como uma aplicação prática de front-end, combinando desenvolvimento de interfaces, JavaScript e experiência do usuário para transformar um conteúdo corporativo em uma experiência interativa.
+O projeto foi desenvolvido como uma aplicação prática de desenvolvimento front-end, combinando **HTML, CSS e JavaScript** com princípios de UI/UX para transformar conteúdo corporativo em uma experiência interativa.
+
+Além da aplicação em si, o projeto demonstra a evolução de uma estrutura inicialmente concentrada em um único arquivo para uma organização mais adequada, separando:
+
+```text
+HTML → Estrutura
+CSS  → Apresentação
+JS   → Comportamento
+```
 
 ---
 
 ## Autor
 
-Junior santos
+**Junior santos**
 
 Desenvolvedor Web
 
