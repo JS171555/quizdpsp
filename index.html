@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+      <title>QUIZ - Sou Cultura DPSP</title>
+      <link rel="icon" href="assets/0004.png" type="image/png">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+      <style>
+         * { font-family: 'Inter', sans-serif; }
+         .card-shadow { box-shadow: 0 20px 35px -8px rgba(0,0,0,0.2); }
+         #progressBar { transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+         .option-transition { transition: all 0.2s ease; }
+         .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+         .feedback-popup {
+         animation: fadeInUp 0.3s ease forwards;
+         }
+         @keyframes fadeInUp {
+         from { opacity: 0; transform: translateY(10px); }
+         to { opacity: 1; transform: translateY(0); }
+         }
+         html, body {
+         margin: 0;
+         padding: 0;
+         }
+         @media (max-width: 640px) {
+         body {
+         margin-top: 0 !important;
+         }
+         }
+         .review-scroll {
+         flex: 1;
+         overflow-y: auto;
+         -webkit-overflow-scrolling: touch;
+         }
+         @keyframes pulse-soft {
+         0%, 100% {
+         transform: scale(1);
+         }
+         50% {
+         transform: scale(1.06);
+         }
+         }
+         .animate-pulse-soft {
+         animation: pulse-soft 1.5s ease-in-out infinite;
+         }
+         .emoji-img {
+         width: 1.4em;          /* ligeiramente maior para melhor legibilidade */
+         height: 1.4em;
+         display: inline-block;  /* garante que a imagem se comporte como texto inline */
+         vertical-align: middle; /* alinha verticalmente ao meio da linha */
+         margin-right: 6px;      /* espaço entre imagem e texto */
+         object-fit: contain;    /* evita distorção */
+         transform: translateY(-1px); /* ajuste fino opcional para compensar o baseline */
+         }
+      </style>
+   </head>
+   <body class="bg-gradient-to-b from-[#2B5EA7] to-[#0A2A5E] min-h-screen flex items-start justify-center">
+      <div class="w-full max-w-[390px] h-[640px] bg-[#145DA0] rounded-[44px] overflow-hidden relative shadow-2xl border-[3px] border-white/20 mt-20 sm:mt-0">
+         <div class="absolute inset-0 bg-gradient-to-b from-[#1E5EAB] via-[#0F3D7A] to-[#062450]"></div>
+         <div class="relative z-10 w-full h-full flex flex-col text-white">
+            <!-- TELA INICIAL -->
+            <div id="startScreen" class="flex-1 flex flex-col items-center justify-between px-5 py-8">
+               <div class="w-full flex justify-center pt-4">
+               </div>
+               <div class="flex flex-col items-center animate__animated animate__fadeIn">
+                  <div class="w-20 h-20 rounded-full flex items-center justify-center text-white/40 text-sm mb-3">
+                     <img src="assets/0004.png" width="90 height=90">
+                  </div>
+                  <h1 class="text-4xl font-extrabold tracking-tight">DPSP</h1>
+                  <p class="text-sm font-medium tracking-wider text-white/80 mt-0">Sou Cultura</p>
+               </div>
+               <button onclick="startQuiz()"
+                  class="bg-white text-[#0A2A5E] w-[90%] py-3 rounded-3xl font-bold text-xl shadow-lg animate-pulse-soft hover:scale-[0.98] active:bg-gray-100 transition">
+               Iniciar quiz
+               </button>   
+            </div>
+            <!-- TELA QUIZ -->
+            <div id="quizScreen" class="hidden flex-1 flex flex-col px-4 pt-6 pb-4">
+               <div class="flex items-center justify-between mb-3">
+                  <button onclick="prevQuestion()" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition text-2xl"><i class="fa-solid fa-arrow-left"></i></button>
+                  <span id="progressText" class="font-semibold text-base">1/10</span>
+                  <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 text-[10px]">
+                     <img src="assets/0003.gif">
+                  </div>
+               </div>
+               <div class="w-full bg-white/20 rounded-full h-5 mb-4">
+                  <div id="progressBar" class="bg-white h-5 rounded-full" style="width:10%"></div>
+               </div>
+               <div class="bg-[#F5F7FA] text-[#0F3A6B] rounded-3xl p-5 flex-1 flex flex-col justify-between card-shadow">
+                  <div>
+                     <h2 id="question" class="text-xl font-bold leading-tight mb-5"></h2>
+                     <div id="answers" class="space-y-3"></div>
+                  </div>
+                  <div id="feedbackArea" class="mt-4 mb-2 min-h-[48px]">
+                     <div id="feedbackMessage" class="text-sm bg-white/80 backdrop-blur-sm p-3 rounded-xl text-[#0F3A6B] shadow-sm hidden feedback-popup"></div>
+                  </div>
+                  <div>
+                     <!-- Botao prixima -->   <button id="nextBtn" onclick="handleNextOrValidate()" class="w-full bg-gradient-to-r from-[#2B5EA7] to-[#2B5EA7] text-white py-3.5 rounded-2xl font-semibold shadow-md transition hover:opacity-90 disabled:opacity-50">
+                     Próxima
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <!-- TELA RESULTADO -->
+            <div id="resultScreen" class="hidden flex-1 flex flex-col px-5 pt-6 pb-5" style="height: 100%;">
+               <!-- cabeçalho fixo no topo -->
+               <div class="flex justify-center mt-1 mb-2">
+                  <div class="w-16 h-16 rounded-full flex items-center justify-center text-white/50 text-xs">
+                     <img src="assets/0005.gif">
+                  </div>
+               </div>
+               <h1 class="text-2xl font-bold text-center mb-0.5">Sua classificação</h1>
+               <p id="levelMessage" class="text-center text-white/90 text-sm font-medium mb-2 px-2"></p>
+               <!-- card de pontuação (compacto) -->
+               <div class="bg-gradient-to-r from-[#0C3777] to-[#2364B8] rounded-xl p-3 mb-3 shadow-inner">
+                  <p id="scoreDisplay" class="text-2xl font-extrabold text-center"></p>
+               </div>
+               <!-- ÁREA DE REVISÃO COM SCROLL (altura dinâmica) -->
+               <div class="flex-1 min-h-0 mb-3">
+                  <div id="review" class="bg-white/5 rounded-xl p-4 text-sm h-full review-scroll border border-white/10">
+                     <!-- preenchido via js -->
+                  </div>
+               </div>
+               <!-- Botão RESGATAR sempre visível -->
+               <button id="resgateBtn"
+                  class="bg-white text-[#0C2F62] w-full py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-gray-100 transition transform active:scale-[0.98] mt-auto flex items-center justify-center gap-2">
+               <img src="assets/0006.gif" class="w-7 h-6" alt="icone">
+               RESGATAR
+               </button>     
+            </div>
+            <div id="customAlert" class="fixed inset-0 flex items-center justify-center bg-black/50 opacity-0 pointer-events-none transition">
+              <div class=" bg-white rounded-2xl p-6 w-[90%] max-w-md text-center shadow-xl scale-90 transition transform" id="alertBox">
+                  <div class=" text-4xl mb-3"><img src="assets/0007.png"></div>
+                  <h2 class="text-xl font-bold text-[#0A2A5E] mb-2">
+                     Resgate realizado!
+                  </h2>
+                  <p class="text-gray-600 mb-4">
+                     Aguarde seu prêmio simbólico: <strong>Badge "Sou Cultura DPSP"</strong>
+                  </p>
+                  <button onclick="closeAlert()" 
+                     class=" text-[#0A2A5E] px-6 py-2 rounded-xl font-semibold hover:opacity-90 transition">
+                  FIM DO QUIZ
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <script>
+         (function(){
+           "use strict";
+         
+          const questions = [
+         { 
+         q: "O que está no centro da cultura DPSP?", 
+         a: ["Crescimento financeiro", "Saúde em primeiro lugar", "Expansão da marca", "Tecnologia"], 
+         c: 1, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Perfeito! A saúde é o núcleo de todas as decisões.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='💡'> Atenção: O foco principal da DPSP vai além de negócios — é sobre saúde." 
+         },
+         { 
+         q: "Qual NÃO é um principio?", 
+         a: ["Disciplina e discernimento", "Processos e pessoas", "Competição interna", "Integração e protagonismo"], 
+         c: 2, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Boa! A DPSP valoriza colaboração, não competição interna. Os princípios fortalecem o trabalho em conjunto.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='💬'> Atenção! Os princípios da DPSP são baseados em colaboração e construção conjunta — competição interna vai contra essa cultura." 
+         },
+         { 
+         q: "“Nosso negócio é relacionamento” quer dizer:", 
+         a: ["Vendas rápidas", "Construir conexões", "Reduzir custos", "Automatizar tudo"], 
+         c: 1, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Relacionamento é a base da confiança.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='💬'> Dica: Não é só vender, é se conectar." 
+         },
+         { 
+         q: "Segundo nossa cultura, tudo é...", 
+         a: ["Venda", "Estrategia", "Atendimento", "Lucro"], 
+         c: 2, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Perfeito! Na DPSP, toda ação impacta o cliente — tudo é atendimento.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='💬'> Quase lá! Na DPSP, não importa a área: toda interação influencia a experiência do cliente." 
+         },
+         { 
+         q: "Qual é a aspiração da DPSP?", 
+         a: ["Ser líder em tecnologia", "Ser a primeira opção", "Ser a mais barata", "Expandir globalmente"], 
+         c: 1, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Ser lembrado primeiro é o objetivo.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='❌'> A aspiração é estar no topo da mente de todos." 
+         },
+         { 
+         q: "Quem faz parte dessa aspiração?", 
+         a: ["Só clientes", "Clientes, colaboradores e acionistas", "Só líderes", "Só investidores"], 
+         c: 1, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> A cultura envolve todos.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='❌'> Pense em quem constrói o ecossistema." 
+         },
+         { 
+         q: "Qual é um princípio da empresa?", 
+         a: ["Competição interna", "Disciplina e discernimento", "Redução de equipe", "Foco só no lucro"], 
+         c: 1, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Base para decisões consistentes.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='❌'> Reflita sobre os valores fundamentais." 
+         },
+         { 
+         q: "“Integração e protagonismo” significa:", 
+         a: ["Trabalhar sozinho", "Esperar ordens", "Colaborar e agir", "Evitar riscos"], 
+         c: 2, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Aqui todos fazem acontecer.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='❌'> É sobre união e atitude." 
+         },
+         { 
+         q: "O que define a atuação da DPSP?", 
+         a: ["Vendas rápidas", "Mobilizar o ecossistema de saúde", "Cortar custos", "Abrir lojas"], 
+         c: 1, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Vai além da farmácia — é um ecossistema.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='❌'> A visão é mais ampla que o balcão." 
+         },
+         { 
+         q: "Ética é:", 
+         a: ["Opcional", "A base de tudo", "Só para líderes", "Teórica"], 
+         c: 1, 
+         feedbackAcerto: "<img src='assets/0001.gif' class='emoji-img' alt='✔️'> Sem ética, nada se sustenta.", 
+         feedbackErro: "<img src='assets/0002.gif' class='emoji-img' alt='❌'> É o alicerce de todas as relações." 
+         }
+         ];
+         
+           const startScr = document.getElementById('startScreen');
+           const quizScr = document.getElementById('quizScreen');
+           const resultScr = document.getElementById('resultScreen');
+           const questionEl = document.getElementById('question');
+           const answersDiv = document.getElementById('answers');
+           const progressText = document.getElementById('progressText');
+           const progressBar = document.getElementById('progressBar');
+           const nextBtn = document.getElementById('nextBtn');
+           const feedbackMsg = document.getElementById('feedbackMessage');
+           const levelMsg = document.getElementById('levelMessage');
+           const scoreDisplay = document.getElementById('scoreDisplay');
+           const reviewEl = document.getElementById('review');
+         
+           let currentIndex = 0;
+           let userAnswers = new Array(10).fill(null);
+           let answerValidated = new Array(10).fill(false);
+           let score = 0;
+           let quizFinished = false;
+           let canSelect = true;
+         
+           function computeScore() {
+             let total = 0;
+             userAnswers.forEach((ans, idx) => { if (ans === questions[idx].c) total += 10; });
+             score = total;
+             return total;
+           }
+         
+           function showFeedback(text, isSuccess = true) {
+         feedbackMsg.classList.remove('hidden');
+         feedbackMsg.innerHTML = text;   // Permite renderizar HTML (imagens)
+         feedbackMsg.classList.add('feedback-popup');
+         if (isSuccess) {
+         feedbackMsg.classList.remove('bg-red-100');
+         feedbackMsg.classList.add('bg-green-100', 'text-green-800');
+         } else {
+         feedbackMsg.classList.remove('bg-green-100');
+         feedbackMsg.classList.add('bg-red-100', 'text-red-800');
+         }
+         }
+         
+           function renderQuestion() {
+             const q = questions[currentIndex];
+             questionEl.innerText = `${currentIndex+1}. ${q.q}`;
+             progressText.innerText = `${currentIndex+1}/10`;
+             progressBar.style.width = `${(currentIndex+1)*10}%`;
+         
+             const selected = userAnswers[currentIndex];
+             const validated = answerValidated[currentIndex];
+             
+             let html = '';
+             q.a.forEach((opt, idx) => {
+               const letter = String.fromCharCode(65+idx);
+               let classes = 'bg-white border border-gray-200 text-[#103A6B]';
+               
+               if (validated) {
+                 if (idx === q.c) classes = 'bg-green-500 text-white border-green-500';
+                 else if (idx === selected && idx !== q.c) classes = 'bg-red-400 text-white border-red-400';
+                 else classes = 'bg-white/80 text-gray-600 border-gray-200';
+               } else {
+                 if (idx === selected) classes = 'bg-blue-500 text-white border-blue-500';
+               }
+         
+               html += `<div onclick="window.handleOptionClick(${idx})" id="opt${idx}" class="p-3.5 rounded-xl border cursor-pointer option-transition font-medium no-tap-highlight ${classes}">${letter}) ${opt}</div>`;
+             });
+             answersDiv.innerHTML = html;
+         
+             if (validated) {
+               const isCorrect = (selected === q.c);
+               showFeedback(isCorrect ? q.feedbackAcerto : q.feedbackErro, isCorrect);
+               canSelect = false;
+               nextBtn.disabled = false;
+               nextBtn.innerText = (currentIndex === 9) ? 'Ver resultado' : 'Próxima';
+             } else {
+               feedbackMsg.classList.add('hidden');
+               canSelect = true;
+               nextBtn.disabled = (selected === null);
+               nextBtn.innerText = (currentIndex === 9 && selected !== null) ? 'Ver resultado' : 'Próxima';
+             }
+           }
+         
+           window.handleOptionClick = function(idx) {
+             if (!canSelect || answerValidated[currentIndex]) return;
+             userAnswers[currentIndex] = idx;
+             nextBtn.disabled = false;
+             renderQuestion();
+           };
+         
+           function validateCurrentAnswer() {
+             const selected = userAnswers[currentIndex];
+             if (selected === null) return false;
+             const q = questions[currentIndex];
+             const isCorrect = (selected === q.c);
+             answerValidated[currentIndex] = true;
+             canSelect = false;
+             computeScore();
+             showFeedback(isCorrect ? q.feedbackAcerto : q.feedbackErro, isCorrect);
+             renderQuestion();
+             if (currentIndex === 9) nextBtn.innerText = 'Ver resultado';
+             return true;
+           }
+         
+           window.handleNextOrValidate = function() {
+             if (quizFinished) return;
+             if (!answerValidated[currentIndex]) {
+               if (userAnswers[currentIndex] === null) { alert('Selecione uma opção antes de continuar.'); return; }
+               validateCurrentAnswer();
+               return;
+             }
+             if (currentIndex < 9) { currentIndex++; renderQuestion(); }
+             else { finishQuiz(); }
+           };
+         
+           window.prevQuestion = function() {
+             if (currentIndex > 0) { currentIndex--; renderQuestion(); }
+           };
+         
+           function finishQuiz() {
+             quizFinished = true;
+             computeScore();
+             quizScr.classList.add('hidden');
+             resultScr.classList.remove('hidden');
+             
+             let levelText = '', description = '';
+             if (score >= 90) { levelText = '⭐️⭐️⭐️⭐️⭐️ Guardião da Cultura'; description = 'Você vive a cultura DPSP no dia a dia.'; }
+             else if (score >= 70) { levelText = '⭐️⭐️⭐️⭐️ Embaixador da Cultura'; description = 'Ótimo entendimento, continue aplicando!'; }
+             else if (score >= 50) { levelText = '⭐️⭐️⭐️ Em Desenvolvimento'; description = 'Você está no caminho certo, revise alguns pontos.'; }
+             else { levelText = '🌱 Precisa Evoluir'; description = 'Hora de se aprofundar mais na cultura DPSP.'; }
+             
+             levelMsg.innerText = description;
+             scoreDisplay.innerText = `${score} pontos · ${levelText}`;
+             
+             let reviewHtml = '';
+             questions.forEach((q, idx) => {
+               const userAns = userAnswers[idx];
+               const userLetter = (userAns !== null) ? String.fromCharCode(65+userAns) : '-';
+               const correctLetter = String.fromCharCode(65+q.c);
+               const isCorrect = (userAns === q.c);
+               reviewHtml += `<div class="mb-3 border-b border-white/10 pb-2"><p class="font-semibold">${idx+1}. ${q.q}</p><p class="text-xs ${isCorrect ? 'text-green-300' : 'text-red-300'}">Sua resposta: ${userLetter}) ${userAns !== null ? q.a[userAns] : 'Não respondida'}</p><p class="text-green-300 text-xs">✓ Correta: ${correctLetter}) ${q.a[q.c]}</p></div>`;
+             });
+             reviewEl.innerHTML = reviewHtml;
+           }
+         
+           window.startQuiz = function() {
+             currentIndex = 0;
+             userAnswers = new Array(10).fill(null);
+             answerValidated = new Array(10).fill(false);
+             score = 0;
+             quizFinished = false;
+             startScr.classList.add('hidden');
+             quizScr.classList.remove('hidden');
+             resultScr.classList.add('hidden');
+             renderQuestion();
+             nextBtn.disabled = true;
+           };
+         
+           const alertEl = document.getElementById('customAlert');
+         const alertBox = document.getElementById('alertBox');
+         
+         document.getElementById('resgateBtn').addEventListener('click', () => {
+         alertEl.classList.remove('opacity-0', 'pointer-events-none');
+         
+         setTimeout(() => {
+         alertBox.classList.remove('scale-90');
+         alertBox.classList.add('scale-100');
+         }, 50);
+         });
+         
+         function closeAlert() {
+         alertBox.classList.remove('scale-100');
+         alertBox.classList.add('scale-90');
+         
+         setTimeout(() => {
+         alertEl.classList.add('opacity-0', 'pointer-events-none');
+         }, 200);
+         }         
+           window.onload = () => { feedbackMsg.classList.add('hidden'); };
+         })();
+      </script>
+   </body>
+</html>
