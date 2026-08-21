@@ -91,7 +91,7 @@ Como o projeto é uma aplicação front-end estática, não é necessário insta
 Clone o repositório:
 
 ```bash
-git clone https://github.com/SEU-USUARIO/quizdpsp.git
+git clone https://github.com/JS171555/quizdpsp.git
 ```
 
 Entre na pasta:
