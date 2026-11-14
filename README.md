@@ -2,7 +2,7 @@
   <img src="assets/0004.png" alt="Logo Quiz DPSP" width="160" />
 </div>
 
-# Quiz DPSP
+<h1 align="center">Quiz DPSP</h1>
 
 <p align="center">
   <strong>Aplicação web interativa para apresentar, de forma leve e gamificada, os principais conceitos da cultura DPSP.</strong>
